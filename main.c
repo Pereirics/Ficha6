@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 #define MAX 10 //Exemplo
 
 typedef struct staticStack {
@@ -83,7 +83,65 @@ int Sfront (SQueue q, int *x) {
     return 1;
 }
 
+typedef struct dinStack {
+    int size; // guarda o tamanho do array values
+    int sp;
+    int *values;
+} *DStack;
 
+void DinitStack (DStack s) {
+    s->sp = 0;
+    s->size = 0;
+    s->values = malloc(sizeof(int)*s->size);
+}
+
+int DisEmpty (DStack s) {
+    return (s->size == 0);
+}
+
+int dupStack (DStack s) {
+    int* temp = malloc(sizeof(int) * 2 * s->size);
+    if (temp != NULL) {
+        for (int i = 0; i < s->size; i++) {
+            temp[i] = s->values[i];
+        }
+        free(s->values);
+        s->values = temp;
+        s->size *= 2;
+        return 0;
+    }
+    return 1;
+}
+
+int Dpush (DStack s, int x) {
+    int r = 0;
+    if (s->sp < s->size) {
+        s->values[s->sp++] = x;
+    }
+    else {
+        r = dupStack(s);
+        if (r == 0) {
+            s->values[s->sp++] = x;
+        }
+    }
+    return r;
+}
+
+int Dpop (DStack s, int *x) {
+    if (s->sp > 0) {
+        *x = s->values[s->sp--];
+        return 0;
+    }
+    return 1;
+}
+
+int Dtop (DStack s, int *x) {
+    if (s->sp > 0) {
+        *x = s->values[s->sp-1];
+        return 0;
+    }
+    return 1;
+}
 
 
 
